@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - TZ=Asia/Tokyo
+    ports:
+      - "${APP_PORT_HOST}:${APP_PORT_CONTAINER}"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGTZ=Asia/Tokyo
+      - TZ=Asia/Tokyo
+    ports:
+      - "${DB_PORT_HOST}:${DB_PORT_CONTAINER}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  data:

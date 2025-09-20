@@ -38,3 +38,11 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Env file ###
+.env
+
+### gradle.properties ###
+gradle.properties
+
+.DS_Store
